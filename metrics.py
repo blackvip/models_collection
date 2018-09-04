@@ -1,10 +1,5 @@
-import keras
 import numpy as np
 import tensorflow as tf
-
-from functools import reduce
-from keras import backend as K
-from keras.losses import binary_crossentropy
 
 # A - truth, B - pred
 def get_iou_vector(A, B):
