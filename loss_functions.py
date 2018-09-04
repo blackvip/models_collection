@@ -1,10 +1,8 @@
 import keras
 import numpy as np
-import random as rn
 import tensorflow as tf
 
 from functools import reduce
-from tensorflow import set_random_seed
 from keras import backend as K
 from keras.losses import binary_crossentropy
 
@@ -187,12 +185,15 @@ def keras_lovasz_hinge(labels,logits):
     return lovasz_hinge(logits, labels, per_image=True, ignore=None)
 
 loss_dict = {
-                'binary_crossentropy' : 'binary_crossentropy',
-                'iou_bce_loss' : iou_bce_loss,
-                'dice_loss' : dice_loss,
-                'bce_dice_loss' : bce_dice_loss,
-                'bce_logdice_loss' : bce_logdice_loss,
-                'lovasz_loss' : lovasz_loss,
-                'keras_lovasz_hinge' : keras_lovasz_hinge,
-                'iou_loss' : get_iou_vector,
+                'iou_loss'               : get_iou_vector,
+                'dice_loss'              : dice_loss,
+                'lovasz_loss'            : lovasz_loss,
+                'iou_bce_loss'           : iou_bce_loss,
+                'bce_dice_loss'          : bce_dice_loss,
+                'bce_logdice_loss'       : bce_logdice_loss,
+                'weighted_bce_loss'      : weighted_bce_loss,
+                'weighted_dice_loss'     : weighted_dice_loss,
+                'keras_lovasz_hinge'     : keras_lovasz_hinge,
+                'binary_crossentropy'    : 'binary_crossentropy',
+                'weighted_bce_dice_loss' : weighted_bce_dice_loss,
             }
