@@ -8,12 +8,6 @@ from tensorflow import set_random_seed
 from keras import backend as K
 from keras.losses import binary_crossentropy
 
-lt = time.localtime(time.time())
-rn.seed(lt.tm_mday)
-np.random.seed(lt.tm_hour)
-set_random_seed(lt.tm_min)
-os.environ['PYTHONHASHSEED'] = str(lt.tm_sec)
-
 
 # A - truth, B - pred
 def get_iou_vector(A, B):
