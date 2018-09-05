@@ -184,6 +184,42 @@ def lovasz_loss(y_true, y_pred):
 def keras_lovasz_hinge(labels,logits):
     return lovasz_hinge(logits, labels, per_image=True, ignore=None)
 
+def castF(x):
+    return K.cast(x, K.floatx())
+
+def iou_loss_core(true,pred):
+    intersection = true * pred
+    notTrue = 1 - true
+    union = true + (notTrue * pred)
+
+    intersection = K.sum(intersection, axis=-1) + K.epsilon()
+    union = K.sum(union, axis=-1) + K.epsilon()
+
+    return  intersection / union
+
+def mixedPenalty(iouWeight, penaltyWeight):
+    def loss(true, pred):
+        #flattening each image - resulting shape = (batch, totalPixels)
+        true = K.batch_flatten(true)
+        pred = K.batch_flatten(pred)
+
+        #boolean filters for ground trugh images with and without masks    
+        noMask = K.sum(true, axis=-1, keepdims=True)
+        noMask = castF(K.less(noMask,.9))
+        hasMask = 1 - noMask
+
+        #regular binary crossentropy for each image
+        cross = binary_crossentropy(true,pred)
+
+        #for ground truth images with no mask, apply a penalty
+        noMaskLoss = penaltyWeight * (noMask * cross)
+        #get the iou loss (negative because we want it to decrease)
+        iouLoss = -iou_loss_core(true, pred)
+
+        #sum all losses, filtered by the presence of ground true masks    
+        return noMaskLoss + hasMask*(cross + (iouWeight*iouLoss))
+    return loss
+
 loss_dict = {
                 'iou_loss'               : get_iou_vector,
                 'dice_loss'              : dice_loss,
@@ -196,4 +232,5 @@ loss_dict = {
                 'keras_lovasz_hinge'     : keras_lovasz_hinge,
                 'binary_crossentropy'    : 'binary_crossentropy',
                 'weighted_bce_dice_loss' : weighted_bce_dice_loss,
+                'mixedPenalty'           : mixedPenalty(0.5, 2),
             }
