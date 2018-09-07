@@ -39,7 +39,15 @@ def faster_iou_metric(label, pred):
     metric_value = tf.py_func(get_iou_vector_batch, [label, pred], tf.float32)
     return metric_value
 
+def mean_iou(y_true, y_pred):
+    y_pred = tf.round(y_pred)
+    intersect = tf.reduce_sum(y_true * y_pred, axis=[1, 2, 3])
+    union = tf.reduce_sum(y_true, axis=[1, 2, 3]) + tf.reduce_sum(y_pred, axis=[1, 2, 3])
+    smooth = tf.ones(tf.shape(intersect))
+    return tf.reduce_mean((intersect + smooth) / (union - intersect + smooth))
+
 metrics_dict = {
                 'accuracy' : 'accuracy', 
-                'mean_iou' : faster_iou_metric,
+                'mean_iou' : mean_iou,
+                'faster_iou_metric' : faster_iou_metric,
                }
