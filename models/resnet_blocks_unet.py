@@ -8,6 +8,7 @@ from keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
 from keras import backend as K
 
 ACTIVATION = "relu"
+img_size_target = 128
 
 def convolution_block(x, filters, size, strides=(1,1), padding='same', activation=True):
     x = Conv2D(filters, size, strides=strides, padding=padding)(x)
