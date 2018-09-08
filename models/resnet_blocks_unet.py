@@ -117,3 +117,4 @@ def get_resnet_blocks_unet():
     input_layer = Input((img_size_target, img_size_target, 1))
     output_layer = build_unet_model(input_layer, 16, 0.5)
     model = Model(input_layer, output_layer)
+    return model
