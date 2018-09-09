@@ -74,4 +74,5 @@ metrics_dict = {
                 'accuracy' : 'accuracy', 
                 'mean_iou' : mean_iou,
                 'faster_iou_metric' : faster_iou_metric,
+                'threshold_mean_iou_metric' : threshold_mean_iou_metric,
                }
