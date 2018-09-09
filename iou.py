@@ -18,7 +18,7 @@ def iou_metric_batch(imgs_true, imgs_pred):
             scores[i] = 1
         else:
             # scores[i] = (iou_thresholds <= iou(imgs_true[i], imgs_pred[i])).mean()
-            scores[i] = ( iou(imgs_true[i], iou_thresholds <=imgs_pred[i]) ).mean()
+            scores[i] = np.mean([iou(imgs_true[i], threshold<=imgs_pred[i]) for threshold in iou_thresholds])
             
     return scores.mean()
 
