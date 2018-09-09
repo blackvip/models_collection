@@ -12,6 +12,16 @@ def iou(img_true, img_pred):
 def iou_metric_batch(imgs_true, imgs_pred):
     num_images = len(imgs_true)
     scores = np.zeros(num_images)
+    for i in range(num_images):
+        if imgs_true[i].sum() == imgs_pred[i].sum() == 0:
+            scores[i] = 1
+        else:
+            scores[i] = iou(imgs_true[i], imgs_pred[i])
+    return scores.mean()
+
+def mean_iou(imgs_true, imgs_pred):
+    num_images = len(imgs_true)
+    scores = np.zeros(num_images)
     
     for i in range(num_images):
         if imgs_true[i].sum() == imgs_pred[i].sum() == 0:
