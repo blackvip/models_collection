@@ -7,6 +7,9 @@ class multi_layer_timer:
     def __init__(self):
         self.timer_depth = -1
 
+    def reset(self):
+        self.timer_depth = -1
+
     @contextmanager
     def timer(self, name):
         t0 = time.time()
