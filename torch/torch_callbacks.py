@@ -1,6 +1,8 @@
 import torch
 import numpy as np
 import pandas as pd
+
+from collections import defaultdict
 from matplotlib import pyplot as plt
 
 # https://github.com/leigh-plt/cs231n_hw2018/blob/master/assignment2/pytorch_tutorial.ipynb
