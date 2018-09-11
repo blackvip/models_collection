@@ -15,7 +15,7 @@ def compute_ious(imgs_true, imgs_pred):
         for j in range(num_preds):
             if imgs_true[i].sum() == imgs_pred[j].sum() == 0:
                 scores[i, j] = 1
-           else:
+            else:
                 scores[i, j] = iou(imgs_true[i], imgs_pred[j])
     return scores
 
