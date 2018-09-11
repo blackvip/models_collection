@@ -10,7 +10,7 @@ def iou(img_true, img_pred):
 def compute_ious(imgs_true, imgs_pred):
     num_images = len(imgs_true)
     num_preds  = len(imgs_pred)
-    scores = np.zeros(num_images, num_preds)
+    scores = np.zeros((num_images, num_preds))
     for i in range(num_images):
         for j in range(num_preds):
             if imgs_true[i].sum() == imgs_pred[j].sum() == 0:
