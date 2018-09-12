@@ -1,6 +1,6 @@
 import torch
 import numpy as np
-
+import torch.nn as nn
 
 class DiceLoss(nn.Module):
     def __init__(self, smooth=0, eps=1e-7):
