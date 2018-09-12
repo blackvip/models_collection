@@ -12,11 +12,12 @@ def compute_ious(imgs_true, imgs_pred):
     num_preds  = len(imgs_pred)
     scores = np.zeros((num_images, num_preds))
     for i in range(num_images):
-        for j in range(num_preds):
+        for j in range(i, num_preds):
             if imgs_true[i].sum() == imgs_pred[j].sum() == 0:
                 scores[i, j] = 1
             else:
                 scores[i, j] = iou(imgs_true[i], imgs_pred[j])
+            scores[j, i] = scores[i, j]
     return scores
 
 def compute_precision_at(ious, threshold):
