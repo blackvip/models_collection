@@ -401,4 +401,4 @@ class UNetResNet(nn.Module):
         dec1 = self.dec1(dec2)
         dec0 = self.dec0(dec1)
 
-        return F.sigmoid(self.final(F.dropout2d(dec0, p=self.dropout_2d)))
+        return self.final(F.dropout2d(dec0, p=self.dropout_2d))
