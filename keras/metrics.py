@@ -48,7 +48,7 @@ def get_iou_vector_batch(y_true_in, y_pred_in):
     return np.array(np.mean(metric), dtype=np.float32)
 
 def faster_iou_metric(label, pred):
-    metric_value = tf.py_func(get_iou_vector_batch, [label, pred], tf.float32)
+    metric_value = tf.py_func(get_iou_vector_batch, [label, pred>0.5], tf.float32)
     return metric_value
 
 
@@ -86,7 +86,7 @@ def compute_eval_metric(gt, predictions):
     return np.float32(sum(precisions) / len(precisions))
 
 def threshold_mean_iou_metric(gt, predictions):
-    metric_value = tf.py_func(compute_eval_metric, [gt, predictions], tf.float32)
+    metric_value = tf.py_func(compute_eval_metric, [gt, predictions>0.5], tf.float32)
     return metric_value
 
 def mean_iou(y_true, y_pred):
@@ -95,6 +95,7 @@ def mean_iou(y_true, y_pred):
     union = tf.reduce_sum(y_true, axis=[1, 2, 3]) + tf.reduce_sum(y_pred, axis=[1, 2, 3])
     smooth = tf.ones(tf.shape(intersect))
     return tf.reduce_mean((intersect + smooth) / (union - intersect + smooth))
+
 def mean_iou(y_true, y_pred):
     prec = []
     for t in np.arange(0.5, 1.0, 0.05):
@@ -105,9 +106,40 @@ def mean_iou(y_true, y_pred):
             score = tf.identity(score)
         prec.append(score)
     return K.mean(K.stack(prec), axis=0)
+
+def get_iou_vector(A, B):
+    batch_size = A.shape[0]
+    metric = []
+    for batch in range(batch_size):
+        t, p = A[batch]>0, B[batch]>0
+#         if np.count_nonzero(t) == 0 and np.count_nonzero(p) > 0:
+#             metric.append(0)
+#             continue
+#         if np.count_nonzero(t) >= 1 and np.count_nonzero(p) == 0:
+#             metric.append(0)
+#             continue
+#         if np.count_nonzero(t) == 0 and np.count_nonzero(p) == 0:
+#             metric.append(1)
+#             continue
+        
+        intersection = np.logical_and(t, p)
+        union = np.logical_or(t, p)
+        iou = (np.sum(intersection > 0) + 1e-10 )/ (np.sum(union > 0) + 1e-10)
+        thresholds = np.arange(0.5, 1, 0.05)
+        s = []
+        for thresh in thresholds:
+            s.append(iou > thresh)
+        metric.append(np.mean(s))
+
+    return np.mean(metric)
+
+def my_iou_metric(label, pred):
+    return tf.py_func(get_iou_vector, [label, pred>0.5], tf.float64)
+
 metrics_dict = {
                 'accuracy' : 'accuracy', 
                 'mean_iou' : mean_iou,
+                'my_iou_metric' : my_iou_metric,
                 'faster_iou_metric' : faster_iou_metric,
                 'threshold_mean_iou_metric' : threshold_mean_iou_metric,
                }
