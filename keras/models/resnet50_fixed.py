@@ -334,6 +334,7 @@ def get_unet_resnet(input_shape):
     conv10 = conv_block_simple(up10, 32, "conv10_1")
     conv10 = conv_block_simple(conv10, 32, "conv10_2")
     conv10 = SpatialDropout2D(0.2)(conv10)
-    x = Conv2D(1, (1, 1), activation="sigmoid", name="prediction")(conv10)
+    x = Conv2D(1, (1, 1), activation=None, padding="same", name="prediction")(conv10)
+    x =  Activation('sigmoid')(x)
     model = Model(resnet_base.input, x)
     return model

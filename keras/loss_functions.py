@@ -274,6 +274,16 @@ def mixedPenalty(iouWeight, penaltyWeight):
         return noMaskLoss + hasMask*(cross + (iouWeight*iouLoss))
     return loss
 
+def focal_loss(gamma = 2., alpha = 0.75):
+    def focal_loss_fixed(y_true, y_pred):
+        y_pred = K.clip(y_pred, 1e-6, 1 - 1e-6)
+        p_t = tf.where(tf.equal(y_true, 1), y_pred, 1. - y_pred)
+        alpha_t = tf.where(tf.equal(y_true, 1), K.ones_like(y_pred) * K.constant(alpha), K.ones_like(y_pred) * K.constant(1. - alpha))
+        loss = K.mean(-1. * alpha_t * (1. - p_t)**gamma * K.log(p_t))
+        return loss
+    return focal_loss_fixed
+# model = model.compile(..., loss = [focal_loss(gamma = 2, alpha = 0.75)]
+
 loss_dict = {
                 'iou_loss'               : get_iou_vector,
                 'dice_loss'              : dice_loss,
@@ -286,5 +296,6 @@ loss_dict = {
                 'keras_lovasz_hinge'     : keras_lovasz_hinge,
                 'binary_crossentropy'    : 'binary_crossentropy',
                 'weighted_bce_dice_loss' : weighted_bce_dice_loss,
+                'focal_loss'             : focal_loss,
                 'mixedPenalty'           : mixedPenalty(0.5, 2),
             }
