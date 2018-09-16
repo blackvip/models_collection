@@ -24,12 +24,15 @@ from keras.layers import AveragePooling2D
 from keras.layers import GlobalAveragePooling2D
 from keras.layers import GlobalMaxPooling2D
 from keras.layers import BatchNormalization
+from keras.layers.convolutional import UpSampling2D, Conv2DTranspose
+from keras.layers.core import SpatialDropout2D
+from keras.layers.merge import concatenate
 from keras.models import Model
 from keras import backend as K
 from keras.engine.topology import get_source_inputs
 from keras.utils import layer_utils
 from keras.utils.data_utils import get_file
-
+from keras.applications.vgg16 import VGG16
 
 WEIGHTS_PATH = 'https://github.com/fchollet/deep-learning-models/releases/download/v0.2/resnet50_weights_tf_dim_ordering_tf_kernels.h5'
 WEIGHTS_PATH_NO_TOP = 'https://github.com/fchollet/deep-learning-models/releases/download/v0.2/resnet50_weights_tf_dim_ordering_tf_kernels_notop.h5'
