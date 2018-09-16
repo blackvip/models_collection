@@ -299,9 +299,6 @@ Uses caffe preprocessing function
 def get_unet_resnet(input_shape):
     resnet_base = ResNet50(input_shape=input_shape, include_top=False)
 
-    if args.show_summary:
-        resnet_base.summary()
-
     for l in resnet_base.layers:
         l.trainable = True
     conv1 = resnet_base.get_layer("activation_1").output
