@@ -299,7 +299,7 @@ Uses caffe preprocessing function
 """
 
 
-def get_unet_resnet(input_shape, vgg_train=False):
+def get_unet_resnet(input_shape):
     resnet_base = ResNet50(input_shape=input_shape, include_top=False)
 
     for l in resnet_base.layers:
@@ -326,11 +326,7 @@ def get_unet_resnet(input_shape, vgg_train=False):
     conv9 = conv_block_simple(up9, 64, "conv9_1")
     conv9 = conv_block_simple(conv9, 64, "conv9_2")
 
-    vgg = VGG16(input_shape=input_shape, input_tensor=resnet_base.input, include_top=False)
-    for l in vgg.layers:
-        l.trainable = vgg_train
-    vgg_first_conv = vgg.get_layer("block1_conv2").output
-    up10 = concatenate([UpSampling2D()(conv9), resnet_base.input, vgg_first_conv], axis=-1)
+    up10 = concatenate([UpSampling2D()(conv9), resnet_base.input], axis=-1)
     conv10 = conv_block_simple(up10, 32, "conv10_1")
     conv10 = conv_block_simple(conv10, 32, "conv10_2")
     conv10 = SpatialDropout2D(0.2)(conv10)
