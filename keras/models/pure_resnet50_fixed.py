@@ -12,7 +12,11 @@ from __future__ import absolute_import
 
 import warnings
 
-from keras.applications.imagenet_utils import _obtain_input_shape
+try:
+    from keras.applications.imagenet_utils import _obtain_input_shape
+except:
+    from keras_applications.imagenet_utils import _obtain_input_shape
+
 from keras.layers import Input
 from keras import layers
 from keras.layers import Dense
